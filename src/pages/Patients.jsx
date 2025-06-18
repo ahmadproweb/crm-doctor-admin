@@ -4,9 +4,13 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 import { secureFetch } from "./api";
 import AddAnalysisModal from "../components/AddAnalysisModal";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
+import { CiSearch } from "react-icons/ci";
 
 const Patients = ({ role }) => {
   const [patients, setPatients] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [modalPatient, setModalPatient] = useState(null);
   const navigate = useNavigate();
@@ -32,14 +36,31 @@ const Patients = ({ role }) => {
     loadPatients();
   }, [apiRoute]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
+  const filteredPatients = patients.filter((p) =>
+    `${p.fullName} ${p.email}`.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="patients-container">
       <h3 className="title">Total Patients : {patients.length}</h3>
+      <div className="search">
+        <input
+          type="search"
+          placeholder="Enter Name | Email"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <CiSearch className="search-icon" />
+      </div>
+
       <div className="profile-container">
-        {Array.isArray(patients) &&
-          patients.map((patient) => (
+           {filteredPatients.length === 0 ? (
+          <span className="error">No Patients available.</span>
+        ) : (
+
+        Array.isArray(filteredPatients) &&
+          filteredPatients.map((patient) => (
             <div className="profile-card" key={patient.id}>
               <div className="avatar">
                 <img src={patient.image || "/avatar.png"} alt="User Avatar" />
@@ -58,57 +79,43 @@ const Patients = ({ role }) => {
 
                 {role === "admin" &&
                   patient.Appointments?.length > 0 &&
-                  patient.Appointments.map((appt, idx) => (
+                  [
+                    ...new Map(
+                      patient.Appointments.map((appt) => [
+                        appt.Doctor?.id,
+                        appt.Doctor,
+                      ])
+                    ).values(),
+                  ].map((doctor, idx) => (
                     <div key={idx}>
                       <p>
-                        <strong>Doctor Name :</strong>{" "}
-                        {appt.Doctor?.fullName || "N/A"}
+                        <strong>Doctor Name:</strong>{" "}
+                        {doctor?.fullName || "N/A"}
                       </p>
                     </div>
                   ))}
 
-                {patient.Appointments?.length > 0 ? (
-                  patient.Appointments.map((appt, idx) => (
-                    <div key={idx}>
-                      <p>
-                        <strong>Service:</strong>{" "}
-                        {appt.Service?.name || "N/A"}
-                      </p>
-                      <p>
-                        <strong>Fee:</strong>{" "}
-                        {appt.Service?.fee
-                          ? `PKR ${appt.Service.fee}`
-                          : "N/A"}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No Appointments</p>
-                )}
-
                 <div className="analytics">
-                  <button
-                    onClick={() => setModalPatient(patient)}
-
-                  >
-                    <IoMdAddCircleOutline
-                      className="icons"
-                    />
+                  <button onClick={() => setModalPatient(patient)}>
+                    <IoMdAddCircleOutline className="icons" />
                     Add Analysis
                   </button>
                   <button
-                    onClick={() => navigate(`/analysis-see/${patient.id}`, { state: { patient } })}
+                    onClick={() =>
+                      navigate(`/analysis-see/${patient.id}`, {
+                        state: { patient },
+                      })
+                    }
                   >
-                    <BsDatabaseExclamation
-
-                      className="icons"
-                    />
+                    <BsDatabaseExclamation className="icons" />
                     See Analysis
                   </button>
                 </div>
               </div>
             </div>
-          ))}
+          ))
+
+             )}
       </div>
 
       <AddAnalysisModal

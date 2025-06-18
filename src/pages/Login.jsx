@@ -77,7 +77,7 @@ const Login = () => {
               className="eye-icon"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              {showPassword ?  <FaEye />: <FaEyeSlash /> }
             </span>
           </div>
           <div className="check-box">

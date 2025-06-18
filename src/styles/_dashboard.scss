@@ -1,5 +1,6 @@
 .dashboard {
   padding: 2rem 3rem;
+  width: 100%;
   .stats {
     display: flex;
     gap: 2rem;
@@ -37,6 +38,8 @@
     border: 1px solid #ececec;
     border-radius: 0.8rem;
     padding: 2rem;
+  width: calc(100% - 70rem);
+
 
     h4 {
       font-size: 1.6rem;
@@ -75,12 +78,20 @@
             font-size: 1.4rem;
             margin: 0;
             color: #262626;
+            text-transform: capitalize;
           }
 
           .date {
             color: #696B80;
             font-size: 1.2rem;
             margin: 0.2rem 0 0;
+          }
+          .services{
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            text-transform: capitalize;
           }
         }
 

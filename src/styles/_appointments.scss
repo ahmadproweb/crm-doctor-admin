@@ -26,7 +26,7 @@
       th {
         text-align: left;
         padding: 1.2rem;
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: 400;
       }
     }
@@ -70,15 +70,26 @@
             cursor: pointer;
           }
 
-          .delete-btn {
+        }
+        .action-btn{
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  
+          button {
             background: none;
             border: none;
-            color: red;
             font-size: 2rem;
             font-weight: 500;
+            color: green;
             cursor: pointer;
+            &:nth-child(2){
+            color: red;
+            font-size: 2.3rem;
+            }
           }
-        }
+
+}
         .status {
           font-size: 1.4rem;
           font-weight: 500;

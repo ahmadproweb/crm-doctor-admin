@@ -135,14 +135,13 @@ const AddDoctor = ({ mode = "create", role }) => {
                 value={formData.speciality}
                 onChange={handleChange}
               >
-                {["", "General physician", "Gynecologist", "Dermatologist", "Pediatricians", "Neurologist", "Gastroenterologist"].map(sp => (
-                  <option key={sp} value={sp}>{sp || "Select Speciality"}</option>
+                {["General physician", "Gynecologist", "Dermatologist", "Pediatricians", "Neurologist", "Gastroenterologist"].map(sp => (
+                  <option key={sp} value={sp}>{sp}</option>
                 ))}
               </select>
             </div>
           </div>
 
-          {/* Email, Experience, Password */}
           <div className="form-row">
             <div className="form-field">
               <label>Email</label>
@@ -151,6 +150,8 @@ const AddDoctor = ({ mode = "create", role }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                  autoComplete="off" 
+  autoCapitalize="none"
               />
             </div>
             <div className="form-field">
@@ -160,8 +161,8 @@ const AddDoctor = ({ mode = "create", role }) => {
                 value={formData.experience}
                 onChange={handleChange}
               >
-                {["", "1 year", "5 years", "10+ years"].map(exp => (
-                  <option key={exp} value={exp}>{exp || "Select Experience"}</option>
+                {["1 year", "5 years", "10+ years"].map(exp => (
+                  <option key={exp} value={exp}>{exp}</option>
                 ))}
               </select>
             </div>
@@ -175,6 +176,8 @@ const AddDoctor = ({ mode = "create", role }) => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
+                  autoComplete="off" 
+  autoCapitalize="none"
               />
             </div>
           </div>
@@ -240,7 +243,7 @@ const AddDoctor = ({ mode = "create", role }) => {
             />
           </div>
 
-          <button type="submit" className="submit">
+          <button type="submit" className="submit" autoComplete="off">
             {isEdit ? "Update Doctor" : "Add Doctor"}
           </button>
         </form>

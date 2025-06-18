@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Navigate, useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
+import { CiSearch } from "react-icons/ci";
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   useEffect(() => {
+    setLoading(true);
     const fetchDoctors = async () => {
-      // try {
+      try {
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/doctor`);
       const data = await res.json();
       setDoctors(data.doctors);
-      // } catch (err) {
-      //   console.error("Failed to fetch doctors:", err);
-      // }
+      } catch (err) {
+        console.error("Failed to fetch doctors:", err);
+      }finally {
+      setLoading(false);
+    }
     };
 
     fetchDoctors();
@@ -41,34 +49,36 @@ const Doctors = () => {
       toast.error(err.message || "Network error");
     }
   };
-
+  if (loading) return <Loading/>;
+ const filteredPatients = doctors.filter((p) =>
+    `${p.fullName} ${p.speciality} ${p.email}`.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <div className="top_doctors">
       <h1>All Doctors</h1>
+      <div className="search">
+              <input
+                type="search"
+                placeholder="Enter Name | Speciality | Email"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <CiSearch className="search-icon" />
+            </div>
       <div className="boxes">
-        {doctors.length === 0 ? (
+        {filteredPatients.length === 0 ? (
           <span className="error">No doctors available.</span>
         ) : (
-          doctors.map((doctor) => (
+          filteredPatients.map((doctor) => (
             <div className="box" key={doctor.id}>
               <div className="img">
                 <img src={doctor.image || "/doctor-1.png"} alt={doctor.name} />
               </div>
               <div className="text">
-                <h4>Dr. {doctor.fullName}</h4>
-                <p>{doctor.speciality}</p>
-                <p style={{ textTransform: 'lowercase' }}>{doctor.email}</p>
-                <p>{doctor.experience}</p>
-                {Array.isArray(doctor.services) && doctor.services.length > 0 && (
-                  <div className="services">
-                    {doctor.services.map((service, index) => (
-                      <>
-                        <p key={index}>{service.name}</p>
-                        <p key={index}>{service.fee}</p>
-                      </>
-                    ))}
-                  </div>
-                )}
+                <h4>Name : Dr. {doctor.fullName}</h4>
+                <p>Speciality : {doctor.speciality}</p>
+                <p style={{ textTransform: 'lowercase' }}>Email : {doctor.email}</p>
+                <p>Experience : {doctor.experience}</p>
                 <div className="actions">
                   <button
                     onClick={() =>
