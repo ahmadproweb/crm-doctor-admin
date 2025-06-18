@@ -1,0 +1,98 @@
+.dashboard {
+  padding: 2rem 3rem;
+  .stats {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    .statCard {
+      background:#FFFFFF;
+      border: 1px solid #ececec;
+      border-radius: 0.8rem;
+      padding: 2rem 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      img {
+        width: 4rem;
+        height: 4rem;
+      }
+
+      .text {
+        h3 {
+          font-size: 2rem;
+          margin: 0;
+          color: #515151;
+        }
+
+        p {
+          font-size: 1.4rem;
+          color: #8893B0;
+        }
+      }
+    }
+  }
+
+  .appointmentsCard {
+    background: white;
+    border: 1px solid #ececec;
+    border-radius: 0.8rem;
+    padding: 2rem;
+
+    h4 {
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-weight: 400;
+      color: #323232;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      .appointmentItem {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.2rem 0;
+        border-top: 1px solid #eee;
+        .left {
+          display: flex;
+          align-items: center;
+          gap: 1.2rem;
+
+          img {
+            width: 3.6rem;
+            height: 3.6rem;
+            border-radius: 50%;
+          }
+
+          .name {
+            font-weight: bold;
+            font-size: 1.4rem;
+            margin: 0;
+            color: #262626;
+          }
+
+          .date {
+            color: #696B80;
+            font-size: 1.2rem;
+            margin: 0.2rem 0 0;
+          }
+        }
+
+        .cancel {
+          background: none;
+          border: none;
+          font-size: 2.8rem;
+          font-weight: 900;
+          color: red;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

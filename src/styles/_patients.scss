@@ -1,0 +1,97 @@
+.patients-container {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 3rem;
+}
+.title {
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.4rem;
+  gap: 0.8rem;
+  font-weight: 400;
+  color: #323232;
+  text-transform: capitalize;
+}
+.profile-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.profile-card {
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #16264d;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .user-name {
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: start;
+    width: 100%;
+  }
+
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    p {
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+      color: #4b5563;
+      a {
+        color: #3c96ff;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      strong {
+        font-weight: 500;
+        margin-right: 0.5rem;
+      }
+    }
+    .analytics {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+      button {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 1.4rem;
+        text-transform: capitalize;
+        font-weight: 600;
+        color: #1f2937;
+        cursor: pointer;
+        .icons {
+          font-size: 2rem;
+        }
+      }
+    }
+  }
+}

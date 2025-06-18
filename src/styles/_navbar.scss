@@ -1,0 +1,105 @@
+.top_navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  .logo_title {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    .img {
+      height: 3.7rem;
+      width: 3.7rem;
+      img {
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+      }
+    }
+    h1 {
+      font-size: 2.3rem;
+      font-weight: 600;
+      text-transform: capitalize;
+      color: #000b6d;
+    }
+    span {
+      border: 1px solid #4b5563;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.3rem 1rem;
+      border-radius: 3rem;
+      font-size: 1rem;
+      text-transform: capitalize;
+      color: #4b5563;
+    }
+  }
+  button {
+    background-color: #303770;
+    border-radius: 3rem;
+    padding: 1rem 2.5rem;
+    text-transform: capitalize;
+    font-size: 1.4rem;
+    color: white;
+    cursor: pointer;
+  }
+}
+
+.sidebar {
+  width: 20rem;
+  height: calc(100dvh - 5.9rem);
+  background-color: #FFFFFF;
+  border-right: 0.1rem solid #bebebe;
+  padding: 2rem 0rem 2rem 1rem;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-radius: 0.8rem;
+  transition: background 0.2s ease;
+  position: relative;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 1.2rem 1rem;
+  width: 100%;
+  font-size: 1.4rem;
+  color: #1f1f1f;
+  gap: 1rem;
+  transition: 0.3s ease-in-out;
+}
+
+.active {
+  background-color: #f9f9ff;
+  &::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 0.4rem;
+    background-color: #303770;
+    border-radius: 1rem;
+  }
+
+  .link {
+    font-weight: 600;
+    color: #303770;
+  }
+}
