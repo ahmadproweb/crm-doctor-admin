@@ -139,7 +139,15 @@ const Appointments = ({ role, token }) => {
 
   if (loading) return <Loading />;
   if (error) return <div className="error">{error}</div>;
-
+  const formatTime12Hour = (timeStr) => {
+    if (!timeStr) return "";
+    const [hour, minute] = timeStr.split(":").map(Number);
+    const suffix = hour >= 12 ? "PM" : "AM";
+    const hour12 = ((hour + 11) % 12) + 1;
+    return `${hour12.toString().padStart(2, "0")}:${minute
+      .toString()
+      .padStart(2, "0")} ${suffix}`;
+  };
   return (
     <>
       <div className="appointments">
@@ -175,7 +183,8 @@ const Appointments = ({ role, token }) => {
                   const doctorImage = app.Doctor?.image || avatar;
                   const DoctorServices = app.Service?.name || "N/A";
                   const DoctorFees = app.Service?.fee || "N/A";
-                  const dateTime = `${app.date} ${app.time}`;
+                  const dateTime = `${app.date} ${formatTime12Hour(app.time)}`;
+
 
                   return (
                     <tr key={app.id || index}>

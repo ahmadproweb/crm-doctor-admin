@@ -2,6 +2,41 @@ import React, { useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import avatar from "/avatar.png";
+const toArray = (val) => {
+  if (!val) return [""];
+
+  // Flatten weird structures
+  const result = [];
+
+  const tryParse = (str) => {
+    try {
+      const parsed = JSON.parse(str);
+      if (Array.isArray(parsed)) return parsed;
+    } catch { }
+    return null;
+  };
+
+  const handleString = (str) => {
+    const parsed = tryParse(str);
+    if (parsed) return parsed;
+    return str.includes(",") ? str.split(",") : [str];
+  };
+
+  if (Array.isArray(val)) {
+    for (const item of val) {
+      if (typeof item === "string") {
+        result.push(...handleString(item));
+      } else if (Array.isArray(item)) {
+        result.push(...item);
+      }
+    }
+  } else if (typeof val === "string") {
+    result.push(...handleString(val));
+  }
+
+  return result.length ? result : [""];
+};
+
 
 const AddDoctor = ({ mode = "create", role }) => {
   const { id } = useParams();
@@ -12,7 +47,8 @@ const AddDoctor = ({ mode = "create", role }) => {
   const [formData, setFormData] = useState({
     fullName: "", email: "", password: "",
     speciality: "", experience: "", about: "",
-    image: null, scheduleDate: "", scheduleTime: "",
+    image: null, scheduleDate: [""], // now array
+    scheduleTime: [""], // now array
   });
   const [previewImage, setPreview] = useState(null);
   const [services, setServices] = useState([{ name: "", fee: "" }]);
@@ -34,9 +70,11 @@ const AddDoctor = ({ mode = "create", role }) => {
       experience: d.experience,
       about: d.about,
       image: null,
-      scheduleDate: d.scheduleDate ?? "",
-      scheduleTime: d.scheduleTime ?? "",
+      scheduleDate: toArray(d.scheduleDate),
+      scheduleTime: toArray(d.scheduleTime),
     });
+
+
     setPreview(d.image);
     setServices(
       Array.isArray(d.services) && d.services.length
@@ -69,12 +107,21 @@ const AddDoctor = ({ mode = "create", role }) => {
       return toast.error("Name, email & password are required");
     }
 
+
     const fd = new FormData();
+
     Object.entries(formData).forEach(([k, v]) => {
+      if (["scheduleDate", "scheduleTime"].includes(k)) return;  // ❌ skip here
       if (k === "password" && isEdit && !v) return;
       if (v) fd.append(k, v);
     });
-    fd.append("services", JSON.stringify(services));
+
+    // single clean values
+    fd.set("scheduleDate", JSON.stringify(formData.scheduleDate));
+    fd.set("scheduleTime", JSON.stringify(formData.scheduleTime));
+    fd.set("services", JSON.stringify(services));
+
+
 
     const token = localStorage.getItem("token");
     const url = isEdit
@@ -97,6 +144,14 @@ const AddDoctor = ({ mode = "create", role }) => {
       toast.error(err.message || "Network error");
     }
   };
+  const handleScheduleChange = (type, index, value) => {
+    setFormData((prev) => {
+      const copy = [...prev[type]];
+      copy[index] = value;
+      return { ...prev, [type]: copy };
+    });
+  };
+
 
   return (
     <div className="add-doctor">
@@ -128,6 +183,7 @@ const AddDoctor = ({ mode = "create", role }) => {
                 onChange={handleChange}
               />
             </div>
+            <p>lorem </p>
             <div className="form-field">
               <label>Speciality</label>
               <select
@@ -150,8 +206,8 @@ const AddDoctor = ({ mode = "create", role }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                  autoComplete="off" 
-  autoCapitalize="none"
+                autoComplete="off"
+                autoCapitalize="none"
               />
             </div>
             <div className="form-field">
@@ -176,33 +232,68 @@ const AddDoctor = ({ mode = "create", role }) => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                  autoComplete="off" 
-  autoCapitalize="none"
+                autoComplete="off"
+                autoCapitalize="none"
               />
             </div>
           </div>
 
-          {/* Schedule */}
+          {/* 📅 Schedule Date + 🕒 Time Combined Section */}
           <div className="form-row">
-            <div className="form-field">
-              <label>Schedule Date</label>
-              <input
-                type="date"
-                name="scheduleDate"
-                value={formData.scheduleDate}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-field">
-              <label>Schedule Time</label>
-              <input
-                type="time"
-                name="scheduleTime"
-                value={formData.scheduleTime}
-                onChange={handleChange}
-              />
-            </div>
+            {formData.scheduleDate.map((_, i) => (
+              <div className="form-field" key={i}>
+                <label>Schedule Date</label>
+                <input
+                  type="date"
+                  value={formData.scheduleDate[i]}
+                  onChange={(e) => handleScheduleChange("scheduleDate", i, e.target.value)}
+                />
+
+                <label>Schedule Time</label>
+                <input
+                  type="time"
+                  value={formData.scheduleTime[i]}
+                  onChange={(e) => handleScheduleChange("scheduleTime", i, e.target.value)}
+                />
+
+                <div className="service-actions">
+                  {/* ➕ Add button only on last input */}
+                  {i === formData.scheduleDate.length - 1 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          scheduleDate: [...prev.scheduleDate, ""],
+                          scheduleTime: [...prev.scheduleTime, ""],
+                        }));
+                      }}
+                    >
+                      Add
+                    </button>
+                  )}
+
+                  {/* ➖ Remove button if more than 1 entry */}
+                  {formData.scheduleDate.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          scheduleDate: prev.scheduleDate.filter((_, idx) => idx !== i),
+                          scheduleTime: prev.scheduleTime.filter((_, idx) => idx !== i),
+                        }));
+                      }}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
+
+
 
           {/* Services Section */}
           <div className="form-row">

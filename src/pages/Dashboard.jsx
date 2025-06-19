@@ -116,7 +116,15 @@ const Dashboard = ({ role, token }) => {
     loadPatients();
   }, [apiRoute]);
   if (loading) return <Loading />;
-
+const formatTime12Hour = (timeStr) => {
+    if (!timeStr) return "";
+    const [hour, minute] = timeStr.split(":").map(Number);
+    const suffix = hour >= 12 ? "PM" : "AM";
+    const hour12 = ((hour + 11) % 12) + 1;
+    return `${hour12.toString().padStart(2, "0")}:${minute
+      .toString()
+      .padStart(2, "0")} ${suffix}`;
+  };
   return (
     <div className="dashboard">
       <div className="stats">
@@ -158,7 +166,7 @@ const Dashboard = ({ role, token }) => {
                   <div>
                     <p className="name">{item.Patient?.fullName}</p>
                     <p className="date">
-                      {item.time} {item.date}
+                      {formatTime12Hour(item.time)} {item.date}
                     </p>
                   </div>
                   <div className="services">

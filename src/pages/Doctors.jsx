@@ -16,6 +16,7 @@ const Doctors = () => {
       try {
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/doctor`);
       const data = await res.json();
+      console.log(data)
       setDoctors(data.doctors);
       } catch (err) {
         console.error("Failed to fetch doctors:", err);
